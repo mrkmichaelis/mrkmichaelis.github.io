@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mark Michaelis | Game Dev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080b12;
+      --bg2:      #0d1220;
+      --bg3:      #111827;
+      --accent:   #00d4ff;
+      --accent2:  #7b61ff;
+      --text:     #e8eaf0;
+      --muted:    #8892a4;
+      --border:   rgba(0,212,255,.12);
+      --glow:     0 0 30px rgba(0,212,255,.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(8,11,18,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: .95rem;
+      color: var(--accent);
+      letter-spacing: .08em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .88rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 20%, rgba(0,212,255,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(123,97,255,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    /* animated grid */
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes gridMove { from { transform: translateY(0); } to { transform: translateY(60px); } }
+
+    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .hero-tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: .78rem;
+      color: var(--accent);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: .35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.8rem;
+      background: rgba(0,212,255,.05);
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2.4rem;
+    }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 2rem;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .92rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-2px); box-shadow: var(--glow); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: .75rem;
+      color: var(--accent);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin-bottom: 3rem;
+      line-height: 1.15;
+    }
+    .section-title span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      margin-bottom: 3rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+    .about-text p strong { color: var(--text); }
+    .skills-group { margin-top: 2rem; }
+    .skills-group h4 { font-size: .82rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: .9rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: .76rem;
+      padding: .3rem .8rem;
+      border-radius: 6px;
+      background: rgba(0,212,255,.07);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      letter-spacing: .04em;
+    }
+    .tag.purple {
+      background: rgba(123,97,255,.07);
+      border-color: rgba(123,97,255,.2);
+      color: var(--accent2);
+    }
+
+    /* ─── PROJECTS ─── */
+    #projects { background: var(--bg); }
+    .projects-grid { display: grid; gap: 2rem; }
+    .project-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .project-card:hover {
+      border-color: rgba(0,212,255,.35);
+      box-shadow: var(--glow);
+      transform: translateY(-4px);
+    }
+    .card-inner { padding: 2.5rem; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .card-number {
+      font-family: 'Space Mono', monospace;
+      font-size: .75rem;
+      color: var(--accent);
+      letter-spacing: .15em;
+      opacity: .5;
+    }
+    .card-badges { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .badge {
+      font-size: .7rem;
+      padding: .22rem .65rem;
+      border-radius: 4px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .badge-blue  { background: rgba(0,212,255,.1);  color: var(--accent); }
+    .badge-purple{ background: rgba(123,97,255,.1); color: var(--accent2); }
+    .badge-green { background: rgba(0,255,128,.1);  color: #00ff80; }
+    .card-title { font-size: 1.8rem; font-weight: 700; margin-bottom: .75rem; }
+    .card-role { font-family: 'Space Mono', monospace; font-size: .8rem; color: var(--accent); margin-bottom: 1rem; }
+    .card-desc { color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+    .card-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .card-detail h5 { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: .5rem; }
+    .card-detail ul { list-style: none; }
+    .card-detail ul li { font-size: .88rem; color: var(--text); padding: .2rem 0; display: flex; align-items: flex-start; gap: .5rem; }
+    .card-detail ul li::before { content: '›'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+    .card-link {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .85rem; font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: .5rem 1.2rem;
+      border-radius: 8px;
+      transition: all .2s;
+    }
+    .card-link:hover { background: rgba(0,212,255,.08); border-color: var(--accent); }
+    .card-separator { height: 1px; background: var(--border); margin: 2rem 0; }
+
+    /* FEATURED card */
+    .project-card.featured {
+      border-color: rgba(0,212,255,.2);
+      background: linear-gradient(135deg, var(--bg3) 0%, rgba(0,212,255,.03) 100%);
+    }
+
+    /* ─── SYSTEMS section inside Starsea card ─── */
+    .systems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .system-item {
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .system-item h5 { color: var(--accent); font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
+    .system-item p { font-size: .82rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── EDUCATION ─── */
+    #education { background: var(--bg2); }
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .edu-item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: border-color .2s;
+    }
+    .edu-item:hover { border-color: rgba(0,212,255,.3); }
+    .edu-num {
+      font-family: 'Space Mono', monospace;
+      font-size: .75rem;
+      color: var(--accent);
+      opacity: .5;
+      flex-shrink: 0;
+      width: 28px;
+    }
+    .edu-text { font-size: .88rem; color: var(--text); line-height: 1.35; }
+    .edu-text span { display: block; font-size: .72rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: .15rem; }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--bg); }
+    .contact-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-box::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 60%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .contact-box h3 { font-size: 2rem; font-weight: 700; margin-bottom: .75rem; }
+    .contact-box p { color: var(--muted); margin-bottom: 2rem; }
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 1.6rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      transition: all .2s;
+    }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .contact-link.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      border: none;
+    }
+    .contact-link.primary:hover { opacity: .88; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: .82rem;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    /* ─── FADE-IN ANIMATION ─── */
+    .fade-in { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .card-inner { padding: 1.75rem; }
+      .contact-box { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#hero" class="nav-logo">MM.design</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for Opportunities</div>
+    <h1>Mark<br><span>Michaelis</span></h1>
+    <p class="hero-sub">
+      Gameplay &amp; Systems Designer crafting immersive mechanics in Unity and Unreal Engine.
+      Focused on traversal, combat feel, and playable prototypes that communicate design.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View My Work</a>
+      <a href="https://f5594b9b-9fe7-482f-b4df-bf6ff2a7e974.filesusr.com/ugd/51220a_83be1f065aff45949d50c09c48f0899f.pdf" target="_blank" class="btn btn-outline">Download Resume ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="container">
+    <p class="section-label fade-in">About</p>
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <h2 class="section-title">Building systems<br>that feel <span>alive</span></h2>
+        <p>
+          I'm <strong>Mark Michaelis</strong>, a Gameplay and Systems Designer with hands-on experience
+          building and shipping game prototypes in both <strong>Unity (C#)</strong> and
+          <strong>Unreal Engine (Blueprint)</strong>.
+        </p>
+        <p>
+          My work spans level layout design, traversal mechanics, UI/UX implementation,
+          VFX with Unreal's Niagara System, and procedurally-driven systems design.
+          I'm comfortable picking up a producer hat when teams need it.
+        </p>
+        <p>
+          Whether it's a parkour level that rewards movement chaining or a space
+          survival prototype built entirely from interconnected runtime systems —
+          I focus on making mechanics feel readable, intentional, and fun.
+        </p>
+        <div style="margin-top:1.5rem;">
+          <a href="https://mrkmichaelis.wixsite.com/my-site-4" target="_blank" class="btn btn-outline" style="font-size:.85rem;">Previous Portfolio Site ↗</a>
+        </div>
+      </div>
+      <div class="fade-in">
+        <div class="skills-group">
+          <h4>Design Skills</h4>
+          <div class="tags">
+            <span class="tag">Gameplay Prototyping</span>
+            <span class="tag">Level Layout Design</span>
+            <span class="tag">Systems Design</span>
+            <span class="tag">UI/UX Implementation</span>
+            <span class="tag">Scripting Behaviors</span>
+            <span class="tag">VFX Design</span>
+          </div>
+        </div>
+        <div class="skills-group" style="margin-top:1.8rem;">
+          <h4>Tools &amp; Engines</h4>
+          <div class="tags">
+            <span class="tag purple">Unity</span>
+            <span class="tag purple">Unreal Engine</span>
+            <span class="tag purple">C#</span>
+            <span class="tag purple">Blueprint</span>
+            <span class="tag purple">Maya</span>
+            <span class="tag purple">Niagara System</span>
+          </div>
+        </div>
+        <div class="skills-group" style="margin-top:1.8rem;">
+          <h4>Also experienced in</h4>
+          <div class="tags">
+            <span class="tag">3D Modeling</span>
+            <span class="tag">Dynamic Sketching</span>
+            <span class="tag">User Experience Design</span>
+            <span class="tag">Team Leadership</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="container">
+    <p class="section-label fade-in">Work</p>
+    <h2 class="section-title fade-in">Featured <span>Projects</span></h2>
+
+    <div class="projects-grid">
+
+      <!-- ── STARSEA ROUTES ── -->
+      <div class="project-card featured fade-in">
+        <div class="card-inner">
+          <div class="card-header">
+            <span class="card-number">01 — Featured</span>
+            <div class="card-badges">
+              <span class="badge badge-blue">Unity</span>
+              <span class="badge badge-blue">C#</span>
+              <span class="badge badge-green">Final Project</span>
+            </div>
+          </div>
+          <div class="card-title">Starsea Routes</div>
+          <div class="card-role">Gameplay Designer · Systems Designer · Unity C# Developer</div>
+          <p class="card-desc">
+            A 2D space survival prototype about navigating a procedurally-placed moving portal
+            while protecting cargo and managing limited directional information. Every run is unique —
+            the route is never stable, so the player constantly adjusts strategy.
+          </p>
+
+          <div class="card-separator"></div>
+
+          <h5 style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:1rem;">Core Systems</h5>
+          <div class="systems-grid">
+            <div class="system-item">
+              <h5>Player System</h5>
+              <p>8-direction WASD movement with rotation to match direction. Clean intro animation on level start.</p>
+            </div>
+            <div class="system-item">
+              <h5>Cargo Health</h5>
+              <p>Health visualized as cargo states (Full → Damaged → Critical). Thematic and intuitive for the space survival genre.</p>
+            </div>
+            <div class="system-item">
+              <h5>Enemy AI</h5>
+              <p>Two pirate types: simple chasers and greater pirates that predict player movement and fire cannonballs ahead of position.</p>
+            </div>
+            <div class="system-item">
+              <h5>Orienting System</h5>
+              <p>A timed arrow reveals portal direction, then recharges. Creates cycles of clear information and uncertainty that scale with difficulty.</p>
+            </div>
+            <div class="system-item">
+              <h5>Hazard System</h5>
+              <p>Asteroids and black holes that spawn based on player position and increase pressure at higher levels.</p>
+            </div>
+            <div class="system-item">
+              <h5>Procedural Design</h5>
+              <p>No fixed maps. Portal distance scales per level and can teleport mid-run, forcing constant route recalculation.</p>
+            </div>
+          </div>
+
+          <div class="card-detail-grid" style="margin-top:1.5rem;">
+            <div class="card-detail">
+              <h5>Support Pickups</h5>
+              <ul>
+                <li>Resupply — restores cargo</li>
+                <li>Clues — speeds up arrow recharge</li>
+                <li>Telescope — expands camera view</li>
+              </ul>
+            </div>
+            <div class="card-detail">
+              <h5>Design Focus</h5>
+              <ul>
+                <li>Systems-driven replayability</li>
+                <li>Readable visual feedback</li>
+                <li>Difficulty that scales cleanly</li>
+                <li>Movement that feels direct</li>
+              </ul>
+            </div>
+          </div>
+
+          <a href="#contact" class="card-link">▶ View Playthrough</a>
+        </div>
+      </div>
+
+      <!-- ── PAPERBOUND ── -->
+      <div class="project-card fade-in">
+        <div class="card-inner">
+          <div class="card-header">
+            <span class="card-number">02</span>
+            <div class="card-badges">
+              <span class="badge badge-purple">Unreal Engine</span>
+              <span class="badge badge-purple">Blueprint</span>
+              <span class="badge badge-blue">Niagara</span>
+            </div>
+          </div>
+          <div class="card-title">Paperbound</div>
+          <div class="card-role">Level Designer · Blueprint Developer · Producer (section lead)</div>
+          <p class="card-desc">
+            A collaborative prototype that combines multiple gameplay concepts under a single narrative framework.
+            I owned the design and implementation of a <strong>fantasy-themed parkour level</strong> — a traversal-first
+            experience built around vertical movement, momentum, and continuous forward flow.
+          </p>
+
+          <div class="card-separator"></div>
+
+          <div class="card-detail-grid">
+            <div class="card-detail">
+              <h5>My Contributions</h5>
+              <ul>
+                <li>Level layout via blockout geometry</li>
+                <li>Traversal routes — climb, sprint, jump</li>
+                <li>Movement tuning & platform spacing</li>
+                <li>VFX design with Niagara System</li>
+                <li>UI/UX implementation</li>
+                <li>Momentum Blueprint scripting</li>
+                <li>Level management pipeline</li>
+              </ul>
+            </div>
+            <div class="card-detail">
+              <h5>Design Goals</h5>
+              <ul>
+                <li>Vertical climbing routes</li>
+                <li>Forward momentum through sprinting</li>
+                <li>Readable player pathing</li>
+                <li>Achievable & satisfying jumps</li>
+              </ul>
+              <h5 style="margin-top:1rem;">Production Role</h5>
+              <ul>
+                <li>Defined level scope</li>
+                <li>Managed iteration direction</li>
+                <li>Aligned section with full project</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card-separator"></div>
+
+          <div style="margin-bottom:1.5rem;">
+            <h5 style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.75rem;">Next Improvements</h5>
+            <div class="tags">
+              <span class="tag">Animation Polish</span>
+              <span class="tag">Movement/Animation Sync</span>
+              <span class="tag">Traversal Audio & Feedback</span>
+            </div>
+          </div>
+
+          <a href="#contact" class="card-link">▶ View Playthrough</a>
+        </div>
+      </div>
+
+      <!-- ── LOST LABYRINTH ── -->
+      <div class="project-card fade-in">
+        <div class="card-inner">
+          <div class="card-header">
+            <span class="card-number">03</span>
+            <div class="card-badges">
+              <span class="badge badge-green">Level Design</span>
+              <span class="badge badge-blue">Puzzle Design</span>
+            </div>
+          </div>
+          <div class="card-title">Lost Labyrinth</div>
+          <div class="card-role">Level Designer · Puzzle Systems Designer</div>
+          <p class="card-desc">
+            A multi-puzzle level built around memory and logic challenges. The experience guides
+            players through a tutorial before introducing escalating puzzle mechanics that test
+            spatial memory and pattern recognition.
+          </p>
+
+          <div class="card-separator"></div>
+
+          <div class="card-detail-grid">
+            <div class="card-detail">
+              <h5>Level Structure</h5>
+              <ul>
+                <li>Tutorial introduction zone</li>
+                <li>Memory tile puzzle</li>
+                <li>Math matching puzzle</li>
+                <li>Failure state — wrong tile resets to start</li>
+              </ul>
+            </div>
+            <div class="card-detail">
+              <h5>Design Approach</h5>
+              <ul>
+                <li>Teach through play</li>
+                <li>Escalating challenge</li>
+                <li>Clear spatial layout</li>
+                <li>Meaningful consequences for mistakes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EDUCATION ═══ -->
+<section id="education">
+  <div class="container">
+    <p class="section-label fade-in">Education</p>
+    <h2 class="section-title fade-in">Courses <span>Completed</span></h2>
+
+    <div class="edu-grid fade-in">
+      <div class="edu-item">
+        <span class="edu-num">01</span>
+        <div class="edu-text">ANM 623 – 3D Modeling/Animation 1 <span>Maya</span></div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">02</span>
+        <div class="edu-text">GAM 601 – Elements of Video Games</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">03</span>
+        <div class="edu-text">GAM 602 – Game Design Principles</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">04</span>
+        <div class="edu-text">GAM 605 – Scripting for Video Games 1</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">05</span>
+        <div class="edu-text">GAM 606 – Game Genre Development</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">06</span>
+        <div class="edu-text">GAM 607 – Action Adventure &amp; RPG Level Design</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">07</span>
+        <div class="edu-text">GAM 610 – Drawing Bootcamp: Dynamic Sketching</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">08</span>
+        <div class="edu-text">GAM 651 – Prototype Game Development</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">09</span>
+        <div class="edu-text">GAM 655 – Scripting for Games 2</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">10</span>
+        <div class="edu-text">IXD 606 – User Experience Design</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">11</span>
+        <div class="edu-text">GAM 778 – Prof. Portfolio &amp; Career Development</div>
+      </div>
+      <div class="edu-item">
+        <span class="edu-num">12</span>
+        <div class="edu-text">GLA 623 – History &amp; Techniques of Game Development</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box fade-in">
+      <p class="section-label" style="margin-bottom:.75rem;">Let's Connect</p>
+      <h3>Ready to build<br>something <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">great</span>?</h3>
+      <p>Open to gameplay design, systems design, and level design roles.<br>Reach out and let's talk.</p>
+      <div class="contact-links">
+        <a href="mailto:mrkmichaelis@gmail.com" class="contact-link primary">✉ mrkmichaelis@gmail.com</a>
+        <a href="https://f5594b9b-9fe7-482f-b4df-bf6ff2a7e974.filesusr.com/ugd/51220a_83be1f065aff45949d50c09c48f0899f.pdf" target="_blank" class="contact-link">Resume PDF ↗</a>
+        <a href="https://mrkmichaelis.wixsite.com/my-site-4" target="_blank" class="contact-link">Portfolio Site ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <p>© 2026 <span>Mark Michaelis</span> — Gameplay & Systems Designer</p>
+</footer>
+
+<!-- ═══ SCROLL ANIMATIONS ═══ -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // stagger children
+        e.target.querySelectorAll('.fade-in').forEach((child, i) => {
+          setTimeout(() => child.classList.add('visible'), i * 80);
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
