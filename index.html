@@ -84,6 +84,12 @@
     .screenshot-item{border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:rgba(0,0,0,.3)}
     .screenshot-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
     .screenshot-item:hover img{transform:scale(1.04)}
+    .blueprint-screenshots{margin:1.5rem 0}
+    .blueprint-screenshots-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.75rem;font-family:'Space Mono',monospace}
+    .blueprint-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
+    .blueprint-item{border-radius:8px;overflow:hidden;border:1px solid rgba(123,97,255,.2);background:rgba(0,0,0,.3)}
+    .blueprint-item img{width:100%;height:auto;display:block;transition:transform .3s ease}
+    .blueprint-item:hover img{transform:scale(1.02)}
     #education{background:var(--bg2)}
     .edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
     .edu-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s}
@@ -288,6 +294,19 @@
               <div class="screenshot-item"><img src="images/paperbound-2.jpg" alt="Paperbound level – dark room with door and podium" loading="lazy" /></div>
               <div class="screenshot-item"><img src="images/paperbound-3.jpg" alt="Paperbound level – bookshelf geometry in Unreal viewport" loading="lazy" /></div>
               <div class="screenshot-item"><img src="images/paperbound-4.jpg" alt="Paperbound level – hanging chandelier fixtures in white room" loading="lazy" /></div>
+            </div>
+          </div>
+          <div class="card-separator"></div>
+          <div class="blueprint-screenshots">
+            <p class="blueprint-screenshots-label">Sprint Momentum Mechanic — Blueprint System</p>
+            <div class="blueprint-grid">
+              <div class="blueprint-item"><img src="images/paperbound-bp-1.jpg" alt="Blueprint – Set bools at start (initialization)" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-2.jpg" alt="Blueprint – Event Tick: Is Sprinting and building momentum check" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-3.jpg" alt="Blueprint – Is Moving on Ground branch" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-4.jpg" alt="Blueprint – Check if player has velocity not equal to 0" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-5.jpg" alt="Blueprint – Check if walk speed and jump height are above minimum" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-6.jpg" alt="Blueprint – Increase jump height and speed if moving" loading="lazy" /></div>
+              <div class="blueprint-item"><img src="images/paperbound-bp-7.jpg" alt="Blueprint – Decrease jump height and speed if not building momentum" loading="lazy" /></div>
             </div>
           </div>
           <a href="#contact" class="card-link">▶ View Playthrough</a>
